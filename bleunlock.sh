@@ -37,11 +37,15 @@ unlock_screen() {
 		pmset wakenow &> /dev/null
 		# 延迟2s
 		caffeinate -u -t 2 &> /dev/null
-		cliclick kp:arrow-up kp:arrow-up
 
-		cliclick t:"$PASSWORD"
-		sleep 0.2
-		cliclick kp:enter kp:enter
+		if [[ "$(is_locked)" == "locked" ]]; then
+			cliclick kp:arrow-up kp:arrow-up
+
+			cliclick t:"$PASSWORD"
+			# sleep 0.2
+			cliclick kp:enter kp:enter
+		fi
+
 	# else
 	#         echo "[INFO] 已经是解锁状态"
 	fi
