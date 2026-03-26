@@ -9,6 +9,7 @@ LOCK_RSSI=-70
 UNLOCK_RSSI=-60
 
 miss_count=0
+rssi_low_count=0
 lock_flag=0 # 0:用户或超时锁定，检测到ble信号后不执行解锁 1:ble 设备信号弱或无信号锁定,检测到ble信号后执行解锁
 
 # ===== 判断锁屏状态 =====
@@ -68,10 +69,14 @@ while true; do
 		RSSI_INT=$RSSI
 
 		if ((RSSI_INT < $LOCK_RSSI)); then
-			lock_flag=1
-			lock_screen
+			((rssi_low_count++))
+			if ((rssi_low_count >= $MISS_COUNT_MAX)); then
+				lock_flag=1
+				lock_screen
+			fi
 
 		elif ((RSSI_INT > $UNLOCK_RSSI)); then
+                        rssi_low_count=0
 			if ((lock_flag == 1)); then
 				lock_flag=0
 				unlock_screen
@@ -80,4 +85,4 @@ while true; do
 	fi
 
 	sleep 1
-done
+done &
