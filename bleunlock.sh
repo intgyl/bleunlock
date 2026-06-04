@@ -62,6 +62,7 @@ while true; do
 		# echo "[INFO] 未检测到设备，miss_count=$miss_count"
 
 		if ((miss_count >= $MISS_COUNT_MAX)); then
+			miss_count=0
 			lock_flag=1
 			lock_screen
 		fi
